@@ -1,6 +1,6 @@
 x = 123
 def test():
-    x = 1
+    x = 3
     asd = False
     zxc = 'test'
     foo = 12.345

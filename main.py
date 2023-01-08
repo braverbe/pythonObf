@@ -23,7 +23,10 @@ def bytecode_obfuscate(content):
             _str += '\\x' + str(byte)
         code += f'{VARIABLE_NAME} += "{_str}"\n'
         index += OFFSET
-    code += f'exec(__import__("\\x62\\x61\\x73\\x65\\x36\\x34").b64decode({VARIABLE_NAME}.encode("\\x75\\x74\\x66\\x2d\\x38")).decode("\\x75\\x74\\x66\\x2d\\x38"))'
+    old_code = code
+    code += f'exec(__import__("\\x62\\x61\\x73\\x65\\x36\\x34").b64decode({VARIABLE_NAME}))'
+    code += '\n'
+    code += old_code
     return code
 
 def add_fake_functions(content, myfile):
@@ -50,6 +53,7 @@ def changeFunctionNames(myFile):
                 # print(string.split()[1].split('(')[0])
                 functionNames.append(string.split()[1].split('(')[0])
 
+#Замена названий функций
     for functionName in functionNames:
         for el in re.split('\n|\t| |:', returnFile):
             if functionName in el:
@@ -73,6 +77,7 @@ def changeFunctionNames(myFile):
     #     file.write(returnFile)
     return returnFile
 
+#Добавление мёртвого кода
 def add_code(myFile):
     old_file_content = []
     new_file_content = []
@@ -98,7 +103,7 @@ def add_code(myFile):
 add_code('example.py')
 def main():
     try:
-        path = argv[1]
+        path = argv[0]
         if not os.path.exists(path):
             print('[-] File not found')
             exit()
